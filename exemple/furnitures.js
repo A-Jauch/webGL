@@ -307,7 +307,7 @@ function bookCase() {
 	}
 	loader.load('models/furnitures/book/scene.gltf', function ( gltf ) {
 		book = gltf.scene;
-		book.scale.set(1,1,1);
+		book.scale.set(10,10,10);
 		bookCGroup.add( book );
 	});
 
