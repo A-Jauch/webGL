@@ -8,7 +8,7 @@ function wall(){
   	//walls
         var wallGroup;
         var geometry2 = new THREE.BoxBufferGeometry( 2000, 1000, 50 );
-        var texture = new THREE.TextureLoader().load('textures/wall.png');
+        var texture = new THREE.TextureLoader().load('textures/wall_test.jpg');
         var material2 = new THREE.MeshBasicMaterial( {map: texture} );
         var wall1 = new THREE.Mesh( geometry2, material2 );
         wall1.position.set(0,500,-425);
