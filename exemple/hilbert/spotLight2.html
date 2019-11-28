@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - lights - spotlight</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
+	</head>
+	<body>
+
+		<div id="info">
+			<a href="http://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - spotlight by <a href="http://master-domain.com" target="_blank" rel="noopener">Master James</a><br />
+		</div>
+
+		<script type="module">
+
+			import * as THREE from '../../build/three.module.js';
+
+			import { GUI } from './jsm/libs/dat.gui.module.js';
+
+			import { OrbitControls } from './jsm/controls/OrbitControls.js';
+
+			var renderer, scene, camera;
+
+			var spotLight, lightHelper, shadowCameraHelper, box;
+
+			var gui;
+
+
+
+			function init() {
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+				//initialisation des ombres
+				renderer.shadowMap.enabled = true;
+				// type d'ombre ici ombre adoucie la plus adoucie!
+				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+				//luminosité de notre image
+				renderer.gammaInput = true;
+				renderer.gammaOutput = true;
+
+				// creation de notre scene
+				scene = new THREE.Scene();
+
+				// initialisation de notre scene
+				camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 3000 );
+				camera.position.set( 0, 0, 1000 );
+
+				// contoleur de camera
+				var controls = new OrbitControls( camera, renderer.domElement );
+				// mise a jour du rendu a chaque mouvement
+				controls.addEventListener( 'change', render );
+				// regalage du zoom
+				controls.minDistance = 5;
+				controls.maxDistance = 2500;
+				// permet d'aller de droite a gauche
+				controls.enablePan = true;
+
+				// lumiere ambuante plus realiste jamais de noir total
+				var ambient = new THREE.AmbientLight( 0xffffff, 0.1 );
+				scene.add( ambient );
+
+				// creation de la lumiere
+				spotLight = new THREE.SpotLight( 0xffffff, 1 );
+				spotLight.position.set( 15, 40, 35 );
+				spotLight.angle = Math.PI / 4;
+				spotLight.penumbra = 0.05;
+				// decroissance de la lumiere par rapport a la distance
+				spotLight.decay = 2;
+				// limite de l'eclairage
+				spotLight.distance = 200;
+
+				// creation de l'ombre de la lumiere spotLight
+				spotLight.castShadow = true;
+				// qualité de l'ombre
+				spotLight.shadow.mapSize.width = 1024;
+				spotLight.shadow.mapSize.height = 1024;
+				// distance min et max de d'aparaition de l'ombre par rapport a la camera
+				spotLight.shadow.camera.near = 10;
+				spotLight.shadow.camera.far = 200;
+				scene.add( spotLight );
+
+				// // helper = meilleur vision grace aux axe
+				// lightHelper = new THREE.SpotLightHelper( spotLight );
+				// scene.add( lightHelper );
+				//
+				// shadowCameraHelper = new THREE.CameraHelper( spotLight.shadow.camera );
+				// scene.add( shadowCameraHelper );
+				//
+				// scene.add( new THREE.AxesHelper( 10 ) );
+
+				// dithering = meilleur lumier mais + de ressources
+
+				// create center
+
+
+				hilbert();
+
+
+
+
+				// permet au controlleur de orbite controle permet a la camera de se fixer sur l'objet a lieu du centre par default
+
+
+
+				window.addEventListener( 'resize', onResize, false );
+
+			}
+
+			// resize la fenetre si il y a changement de resolution
+			function onResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			// permet de faire un rendu de notre scene
+			function render() {
+
+				//lightHelper.update();
+
+				//shadowCameraHelper.update();
+
+				renderer.render( scene, camera );
+
+			}
+
+			// afficher une boite qui permet de modifier des parametre de notre scene
+			function buildGui() {
+
+				gui = new GUI();
+
+				var params = {
+					'light color': spotLight.color.getHex(),
+					intensity: spotLight.intensity,
+					distance: spotLight.distance,
+					angle: spotLight.angle,
+					penumbra: spotLight.penumbra,
+					decay: spotLight.decay,
+				};
+
+				gui.addColor( params, 'light color' ).onChange( function ( val ) {
+
+					spotLight.color.setHex( val );
+					render();
+
+				} );
+
+				gui.add( params, 'intensity', 0, 2 ).onChange( function ( val ) {
+
+					spotLight.intensity = val;
+					render();
+
+				} );
+
+
+				gui.add( params, 'distance', 50, 200 ).onChange( function ( val ) {
+
+					spotLight.distance = val;
+					render();
+
+				} );
+
+				gui.add( params, 'angle', 0, Math.PI / 3 ).onChange( function ( val ) {
+
+					spotLight.angle = val;
+					render();
+
+				} );
+
+				gui.add( params, 'penumbra', 0, 1 ).onChange( function ( val ) {
+
+					spotLight.penumbra = val;
+					render();
+
+				} );
+
+				gui.add( params, 'decay', 1, 2 ).onChange( function ( val ) {
+
+					spotLight.decay = val;
+					render();
+
+				} );
+
+				// gui.add( params, 'posX', -50, 50 ).onChange( function ( val ) {
+				//
+				// 	box.position.x = val;
+				// 	render();
+				//
+				// } );
+				//
+				// gui.add( params, 'posY', 0.01, 10 ).onChange( function ( val ) {
+				//
+				// 	box.position.y = val;
+				// 	render();
+				//
+				// } );
+
+				gui.open();
+
+			}
+
+			function hilbert(){
+
+				var curveFinal, modele0, material, vector, i, center, halfSquare;
+
+				halfSquare = 100;
+
+
+				center = new THREE.Vector3(0,0,0);
+				vector = new THREE.Geometry();
+				vector.vertices.push(new THREE.Vector3(center.x - halfSquare, center.y - halfSquare, 0)); //x, y, z
+				vector.vertices.push(new THREE.Vector3(center.x - halfSquare, center.y + halfSquare, 0));
+				/* linewidth on windows will always be 1 */
+
+				vector.vertices.push(new THREE.Vector3( center.x + halfSquare, center.y + halfSquare, 0) );
+				vector.vertices.push(new THREE.Vector3( center.x + halfSquare, center.y - halfSquare, 0) );
+				material = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 5 } );
+				modele0 = new THREE.Line(vector, material);
+
+
+
+				curveFinal = new THREE.Group();
+				curveFinal.add( modele0 );
+				scene.add( curveFinal );
+			}
+
+			init();
+
+			buildGui();
+
+			render();
+
+
+
+
+		</script>
+
+	</body>
+
+</html>
