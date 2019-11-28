@@ -206,6 +206,8 @@ function poster(scene){
 				var post_text =  new THREE.TextureLoader().load( 'textures/prof.jpg' );
 				var post_text2 =  new THREE.TextureLoader().load( 'textures/lego.jpg' );
 				var post_text3 =  new THREE.TextureLoader().load( 'textures/toy.jpg' );
+				var post_text4 =  new THREE.TextureLoader().load( 'textures/pokemon.jpg' );
+				var post_text5 =  new THREE.TextureLoader().load( 'textures/yugi.jpg' );
 
 
 // wallpapers card
@@ -215,15 +217,22 @@ function poster(scene){
 				var post = new THREE.BoxBufferGeometry(60,90,0);
 				var post2 = new THREE.BoxBufferGeometry(580,290,0);
 				var post3 = new THREE.BoxBufferGeometry(140,210,0);
+				var post4 = new THREE.BoxBufferGeometry(300,240,0);
+				var post5 = new THREE.BoxBufferGeometry(200,450,0);
+
 
 
 				var post_mat = new THREE.MeshBasicMaterial({map :post_text});
 				var post_mat2= new THREE.MeshBasicMaterial({map: post_text2})
 				var post_mat3= new THREE.MeshBasicMaterial({map: post_text3})
+				var post_mat4= new THREE.MeshBasicMaterial({map: post_text4})
+				var post_mat5= new THREE.MeshBasicMaterial({map: post_text5})
 
 				var post1 = new THREE.Mesh(post,post_mat);
 				var post2 = new THREE.Mesh(post2,post_mat2);
 				var post3 = new THREE.Mesh(post3,post_mat3);
+				var post4 = new THREE.Mesh(post4,post_mat4);
+				var post5 = new THREE.Mesh(post4,post_mat5);
 
 				post1.position.set(0,200,0);
 
@@ -235,6 +244,13 @@ function poster(scene){
 
 				post3.position.set(-420,800,-395);
 				scene.add(post3);
+
+				post4.position.set(490,700,-395);
+				scene.add(post4);
+
+				post5.position.set(590,700,-395);
+				scene.add(post5);
+
 
 
 // card
@@ -282,6 +298,9 @@ function poster(scene){
 
 				scene.add(picture);
 }
+
+
+
 
 
 export { office, bed, door, poster }
