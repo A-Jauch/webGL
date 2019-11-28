@@ -20,7 +20,7 @@
 			import Stats from './jsm/libs/stats.module.js';
 			import { OrbitControls } from './jsm/controls/OrbitControls.js';
 			import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
-			import {office, bed, door, poster} from './furnitures.js';
+			import {office, bed, door, poster, bookCase} from './furnitures.js';
 			import { wall, ground } from './room.js';
 
 
@@ -81,7 +81,7 @@
 
 
 				poster(scene);
-				scene.add( wall(), ground(), office(), bed(), door() );
+				scene.add( wall(), ground(), office(), bed(), door(), bookCase() );
 
 
 
