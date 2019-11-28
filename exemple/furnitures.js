@@ -311,6 +311,10 @@ function bookCase() {
 		bookCGroup.add( book );
 	});
 
+	bookCGroup.rotation.y = pi;
+	bookCGroup.position.z += 950;
+	bookCGroup.position.x += 500;
+
 	return bookCGroup;
 }
 
