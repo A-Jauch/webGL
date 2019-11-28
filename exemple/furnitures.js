@@ -74,7 +74,7 @@ function bed(){
         var material3 = new THREE.MeshBasicMaterial( {map: texture2} );
 
         var base1 = new THREE.Mesh( geometry4, material3 );
-        base1.position.set(- 1025, 250, - 400 + (50 / 2));
+        base1.position.set(- 1000, 250, - 400 + (50 / 2));
 
         var base2 = base1.clone();
         base2.position.x += 475;
