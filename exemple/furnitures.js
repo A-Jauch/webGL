@@ -283,5 +283,36 @@ function poster(scene){
 				scene.add(picture);
 }
 
+function bookCase() {
+	//bookcase
+	var bookCGroup;
+	bookCGroup = new THREE.Group();
+	var bookCTexture = new THREE.TextureLoader().load( 'textures/wood.jpg' );
+	var bookCGeometry1 = new THREE.BoxBufferGeometry( 360, 20, 100 );
+	var bookCGeometry2 = new THREE.BoxBufferGeometry(20, 420, 100);
+	var bookCMaterial = new THREE.MeshBasicMaterial( { map: bookCTexture } );
+	var book;
 
-export { office, bed, door, poster }
+	for (let i = 0; i < 500; i = i + 100) {
+		var bookCPiece1 = new THREE.Mesh( bookCGeometry1, bookCMaterial );
+		bookCPiece1.position.y += i + 10;
+		bookCGroup.add(bookCPiece1);
+
+	}
+	for (let i = - 190; i < 300; i = i + 380) {
+		var bookCPiece2 = new THREE.Mesh( bookCGeometry2, bookCMaterial);
+		bookCPiece2.position.y += 420/2;
+		bookCPiece2.position.x = i;
+		bookCGroup.add(bookCPiece2);
+	}
+	loader.load('models/furnitures/book/scene.gltf', function ( gltf ) {
+		book = gltf.scene;
+		book.scale.set(1,1,1);
+		bookCGroup.add( book );
+	});
+
+	return bookCGroup;
+}
+
+
+export { office, bed, door, poster, bookCase }
