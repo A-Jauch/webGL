@@ -153,17 +153,21 @@ function bed(){
 
 function door(){
 	//door features
-				var doorGroup;
-        var doorFeatures = [360, 800, 50];
-      	var doorPosition = [0, doorFeatures[1]/2, 975];
-        doorGroup = new THREE.Group();
+		var doorGroup;
+        var doorFeatures = [360, 800, 30];
+        var doorPosition = [-200, 0, 0];
+		var centerPointPosition = [100, doorFeatures[1]/2, 1025];
+				
 // point
 
         var rotationPointGeometry = new THREE.SphereBufferGeometry( 1, 1, 1000 );
-        var rotationPointMaterial = new THREE.MeshBasicMaterial( { color : 0xFFFFFF } );
+        var rotationPointMaterial = new THREE.MeshBasicMaterial( { color : 0x000000 } );
         var rotationPoint = new THREE.Mesh( rotationPointGeometry, rotationPointMaterial );
-        rotationPoint.position.set(doorPosition[0] + 200, doorPosition[1], doorPosition[2]);
-        doorGroup.add( rotationPoint );
+        rotationPoint.position.set(0,0,0);
+
+		doorGroup = new THREE.Group();	
+		doorGroup.applyMatrix( new THREE.Matrix4().makeTranslation(centerPointPosition[0], centerPointPosition[1], centerPointPosition[2]) );
+		doorGroup.add( rotationPoint );
 //door
 
         var doorTexture = new THREE.TextureLoader().load( 'textures/4panel.jpg' );
