@@ -60,7 +60,7 @@
 			import { GUI } from './jsm/libs/dat.gui.module.js';
 			import { FirstPersonControls } from './jsm/controls/FirstPersonControls.js';
 			import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
-			import {office, bed, door, poster} from './furnitures.js';
+			import {office, bed, door, poster, dresser} from './furnitures.js';
 			import { wall, ground } from './room.js';
 
 
@@ -79,7 +79,7 @@
 		var pi = Math.PI;
 
     var centre;
-    var wallGroup, doorGroup;
+    var wallGroup, doorGroup, dresserGroup;
 
 		var startButton = document.getElementById( 'startButton' );
 		startButton.addEventListener( 'click', init );
@@ -170,7 +170,7 @@
 
 
 				poster(scene);
-				scene.add( wall(), ground(), office(), bed(), door() );
+				scene.add( wall(), ground(), office(), bed(), door(), dresser() );
 
         renderer = new THREE.WebGLRenderer( { antialias: true } );
         renderer.setPixelRatio( window.devicePixelRatio );
