@@ -156,7 +156,7 @@ function door(){
 		var doorGroup;
         var doorFeatures = [360, 800, 30];
         var doorPosition = [-200, 0, 0];
-		var centerPointPosition = [100, doorFeatures[1]/2, 1025];
+		var centerPointPosition = [100, doorFeatures[1]/2, 985];
 				
 // point
 
