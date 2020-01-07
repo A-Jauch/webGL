@@ -134,32 +134,9 @@
 
 				})
 
-			var oscillator = listener.context.createOscillator();
-			oscillator.type = 'sine';
-			oscillator.frequency.setValueAtTime( 144, sound1.context.currentTime );
-			oscillator.start( 0 );
 
-			var SoundControls = function () {
-			this.master = listener.getMasterVolume();
 
-			this.Ambient = sound1.getVolume();
-			};
 
-			var GeneratorControls = function () {
-			this.frequency = oscillator.frequency.value;
-			this.wavetype = oscillator.type;
-			};
-
-			var gui = new GUI();
-			var soundControls = new SoundControls();
-			var generatorControls = new GeneratorControls();
-			var volumeFolder = gui.addFolder( 'sound volume' );
-			var generatorFolder = gui.addFolder( 'sound generator' );
-
-			volumeFolder.add( soundControls, 'Ambient' ).min( 0.0 ).max( 1.0 ).step( 0.01 ).onChange( function () {
-				sound1.setVolume( soundControls.Ambient );
-			} );
-		  volumeFolder.open();
 
 
 
@@ -177,6 +154,14 @@
 
 
 
+		var oscillator = listener.context.createOscillator();
+		oscillator.type = 'sine';
+		oscillator.frequency.setValueAtTime( 144, sound1.context.currentTime );
+		oscillator.start( 0 );
+
+
+
+
 				poster(scene);
 				scene.add( wall(), ground(), office(), bed(), door() );
 
@@ -186,8 +171,20 @@
         renderer.shadowMap.enabled = true;
         container.appendChild( renderer.domElement );
 
+				var p_sound1 = new THREE.PositionalAudio(listener);
+				audioloader.load('sounds/Project_Utopia.ogg',function(buffer){
+				p_sound1.setBuffer( buffer );
+				p_sound1.setRefDistance( 10 );
+			//	p_sound1.setLoop(true);
+				p_sound1.play();
+
+			} );
+			bed().add(p_sound1);
+
+
 
         window.addEventListener( 'resize', onWindowResize, false );
+
 
         // stats
         stats = new Stats();
@@ -200,7 +197,32 @@
 				controls.noFly = true;
 				controls.lookVertical = true;
 
+				var SoundControls = function () {
+				this.master = listener.getMasterVolume();
 
+				this.Positional = p_sound1.getVolume();
+
+				this.Ambient = sound1.getVolume();
+				};
+
+				var GeneratorControls = function () {
+				this.frequency = oscillator.frequency.value;
+				this.wavetype = oscillator.type;
+				};
+
+				var gui = new GUI();
+				var soundControls = new SoundControls();
+				var generatorControls = new GeneratorControls();
+				var volumeFolder = gui.addFolder( 'sound volume' );
+
+				volumeFolder.add( soundControls, 'Ambient' ).min( 0.0 ).max( 1.0 ).step( 0.01 ).onChange( function () {
+					sound1.setVolume( soundControls.Ambient );
+				} );
+
+				volumeFolder.add( soundControls, 'Positional' ).min( 0.0 ).max( 1.0 ).step( 0.01 ).onChange( function () {
+					p_sound1.setVolume( soundControls.Positional );
+				} );
+				volumeFolder.open();
     }
 
     function onWindowResize() {

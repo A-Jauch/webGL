@@ -305,6 +305,7 @@ function poster(scene){
 				picture.rotation.set(0,-4 * pi/6, 0);
 
 				scene.add(picture);
+
 }
 
 
