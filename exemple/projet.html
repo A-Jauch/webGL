@@ -60,7 +60,7 @@
 			import { GUI } from './jsm/libs/dat.gui.module.js';
 			import { FirstPersonControls } from './jsm/controls/FirstPersonControls.js';
 			import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
-			import {office, bed, door, poster} from './furnitures.js';
+			import {office, bed, door, poster, bookCase} from './furnitures.js';
 			import { wall, ground } from './room.js';
 
 
@@ -163,7 +163,7 @@
 
 
 				poster(scene);
-				scene.add( wall(), ground(), office(), bed(), door() );
+				scene.add( wall(), ground(), office(), bed(), door(),bookCase() );
 
         renderer = new THREE.WebGLRenderer( { antialias: true } );
         renderer.setPixelRatio( window.devicePixelRatio );
@@ -174,8 +174,8 @@
 				var p_sound1 = new THREE.PositionalAudio(listener);
 				audioloader.load('sounds/Project_Utopia.ogg',function(buffer){
 				p_sound1.setBuffer( buffer );
-				p_sound1.setRefDistance( 10 );
-			//	p_sound1.setLoop(true);
+				p_sound1.setRefDistance( 20 );
+				p_sound1.setLoop( true );
 				p_sound1.play();
 
 			} );

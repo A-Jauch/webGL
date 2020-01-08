@@ -71,10 +71,10 @@ function bed(){
 		bedGroup = new THREE.Group();
 		var geometry4 = new THREE.BoxBufferGeometry( 50, 500, 50 );
         var texture2 = new THREE.TextureLoader().load('textures/wood.png');
-        var material3 = new THREE.MeshBasicMaterial( {map: texture2} );
+        var material3 = new THREE.MeshPhongMaterial( {map: texture2} );
 
         var base1 = new THREE.Mesh( geometry4, material3 );
-        base1.position.set(- 1000, 250, - 400 + (50 / 2));
+        base1.position.set(- 1000 + (50 / 2), 250, - 400 + (50 / 2));
 
         var base2 = base1.clone();
         base2.position.x += 475;
@@ -115,14 +115,14 @@ function bed(){
         var geometry9 = new THREE.BoxBufferGeometry( 425, 100, 850 );
         //var texture3 = new THREE.TextureLoader().load('textures/mattress.jpg');
         //var material4 = new THREE.MeshBasicMaterial( {map: texture3} );
-		var material4 = new THREE.MeshBasicMaterial( {color: 0xd3d3d3});
+		var material4 = new THREE.MeshPhongMaterial( {color: 0xd3d3d3});
         var mattress = new THREE.Mesh( geometry9, material4 );
         mattress.position.set( - 725 - (25 / 2), 250, 50);
 
         // blanket
 
 		var geometry10 = new THREE.BoxBufferGeometry(440, 10, 650);
-		var material5 = new THREE.MeshBasicMaterial( {color: 0x0000ff});
+		var material5 = new THREE.MeshPhongMaterial( {color: 0x0000ff});
 		var blanket1 = new THREE.Mesh( geometry10, material5);
 		blanket1.position.set(- 725 - (25 / 2), 305, 150);
 
@@ -147,10 +147,11 @@ function bed(){
         bedGroup.add(blanket1);
         bedGroup.add(blanket2);
         bedGroup.add(blanket3);
+        bedGroup.castShadow = true;
+        bedGroup.receiveShadow = true;
 
 				return bedGroup;
 }
-
 function door(){
 	//door features
 				var doorGroup;
@@ -308,8 +309,60 @@ function poster(scene){
 
 }
 
+function bookCase() {
+	//bookcase
+	var bookCGroup, books;
+	bookCGroup = new THREE.Group();
+	books = new THREE.Group();
+	var bookCTexture = new THREE.TextureLoader().load( 'textures/wood.jpg' );
+	var bookCGeometry1 = new THREE.BoxBufferGeometry( 360, 20, 100 );
+	var bookCGeometry2 = new THREE.BoxBufferGeometry(20, 420, 100);
+	var bookCMaterial = new THREE.MeshPhongMaterial( { map: bookCTexture } );
+	var book, book2, books2;
+
+	for (let i = 0; i < 500; i = i + 100) {
+		var bookCPiece1 = new THREE.Mesh( bookCGeometry1, bookCMaterial );
+		bookCPiece1.position.y += i + 10;
+		bookCGroup.add(bookCPiece1);
+
+	}
+	for (let i = - 190; i < 300; i = i + 380) {
+		var bookCPiece2 = new THREE.Mesh( bookCGeometry2, bookCMaterial);
+		bookCPiece2.position.y += 420/2;
+		bookCPiece2.position.x = i;
+		bookCGroup.add(bookCPiece2);
+	}
+	loader.load('models/furnitures/book/scene.gltf', function ( gltf ) {
+		book = gltf.scene;
+		book.scale.set(200,200,200);
+		book.position.y += 22;
+		book.position.z += 40;
+		book.rotation.y = pi / 2;
+		books.add( book );
+
+		book2 = book.clone();
+		book2.position.x -= 90;
+		books.add(book2);
+		books.position.y -= 7;
+
+		for (let i = 100; i < 300; i += 100) {
+			books2 = books.clone();
+			books2.position.y += i;
+			books.add(books2);
+		}
+
+	});
+
+	bookCGroup.add(books);
+	bookCGroup.rotation.y = pi;
+	bookCGroup.position.z += 950;
+	bookCGroup.position.x += 500;
+
+	bookCGroup.castShadow = true;
+	bookCGroup.receiveShadow = true;
+
+	return bookCGroup;
+}
 
 
-
-
-export { office, bed, door, poster }
+export { office, bed, door, poster, bookCase }
