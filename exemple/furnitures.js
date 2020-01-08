@@ -59,6 +59,8 @@ function office(){
 				office.position.set(500,0,-200);
 				office.rotation.set(0,-pi/2,0)
 
+				office.castShadow = true;
+				office.receiveShadow = true;
 				return office;
 
 }
@@ -196,6 +198,9 @@ function door(){
         betweenHandle.position.set(handlePosition[0], handlePosition[1], handlePosition[2]);
         betweenHandle.rotation.x = Math.PI/2;
         doorGroup.add( betweenHandle );
+
+				doorGroup.castShadow = true;
+				doorGroup.receiveShadow = true;
 
         return doorGroup;
 }
@@ -421,7 +426,8 @@ function dresser(scene){
 					flatScreen.position.set(dresserFootPosition[0], dresserFootPosition[1] + 231, dresserFootPosition[2]);
 					dresserGroup.add( flatScreen );
     			});
-
+					dresserGroup.castShadow = true;
+					dresserGroup.receiveShadow = true;
 					dresserGroup.position.set(850,0,700);
 				return dresserGroup;
 
