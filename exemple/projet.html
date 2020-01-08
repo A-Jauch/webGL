@@ -36,7 +36,7 @@
 			color: #777777;
 			font-size: 12px;
 		}
-		#overlay {
+		#instructions,#overlay {
 		color:black;
 		background-color:Black;
 		background-size: cover;
@@ -50,7 +50,17 @@
 </head>
 
 <body>
+	<div id="blocker">
 
+			<div id="instructions">
+				<span style="font-size:36px">Click to play</span>
+				<br /><br />
+				Move: WASD<br/>
+				Jump: SPACE<br/>
+				Look: MOUSE
+			</div>
+
+		</div>
 	<div id="overlay">
 			<div>
 				<button id="startButton">Enter in Toy World </button>
@@ -62,10 +72,11 @@
 			import * as THREE from '../build/three.module.js';
 			import Stats from './jsm/libs/stats.module.js';
 			import { GUI } from './jsm/libs/dat.gui.module.js';
-			import { FirstPersonControls } from './jsm/controls/FirstPersonControls.js';
+		//	import { FirstPersonControls } from './jsm/controls/FirstPersonControls.js';
 			import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
 			import {office, bed, door, poster, bookCase, dresser} from './furnitures.js';
 			import { wall, ground } from './room.js';
+			import { PointerLockControls } from './jsm/controls/PointerLockControls.js';
 
 
 
@@ -88,6 +99,19 @@
 		var startButton = document.getElementById( 'startButton' );
 		startButton.addEventListener( 'click', init );
 
+
+			var objects = [];
+			var raycaster;
+			var moveForward = false;
+			var moveBackward = false;
+			var moveLeft = false;
+			var moveRight = false;
+			var canJump = false;
+			var prevTime = performance.now();
+			var velocity = new THREE.Vector3();
+			var direction = new THREE.Vector3();
+			var vertex = new THREE.Vector3();
+			var color = new THREE.Color();
 
     animate();
 
@@ -181,11 +205,110 @@
         container.appendChild( stats.dom );
 
 				//Control cam
-				controls = new FirstPersonControls( camera, renderer.domElement );
-				controls.movementSpeed = 300;
-				controls.lookSpeed = 0.10;
-				controls.noFly = true;
-				controls.lookVertical = true;
+			//	controls = new FirstPersonControls( camera, renderer.domElement );
+			//	controls.movementSpeed = 300;
+		//		controls.lookSpeed = 0.10;
+		//		controls.noFly = true;
+		//		controls.lookVertical = true;
+		controls = new PointerLockControls( camera, document.body );
+			var blocker = document.getElementById( 'blocker' );
+			var instructions = document.getElementById( 'instructions' );
+			instructions.addEventListener( 'click', function () {
+				controls.lock();
+			}, false );
+			controls.addEventListener( 'lock', function () {
+				instructions.style.display = 'none';
+				blocker.style.display = 'none';
+			} );
+			controls.addEventListener( 'unlock', function () {
+				blocker.style.display = 'block';
+				instructions.style.display = '';
+			} );
+			scene.add( controls.getObject() );
+			var onKeyDown = function ( event ) {
+				switch ( event.keyCode ) {
+					case 38: // up
+					case 87: // w
+						moveForward = true;
+						break;
+					case 37: // left
+					case 65: // a
+						moveLeft = true;
+						break;
+					case 40: // down
+					case 83: // s
+						moveBackward = true;
+						break;
+					case 39: // right
+					case 68: // d
+						moveRight = true;
+						break;
+					case 32: // space
+						if ( canJump === true ) velocity.y += 950;
+						canJump = false;
+						break;
+				}
+			};
+			var onKeyUp = function ( event ) {
+				switch ( event.keyCode ) {
+					case 38: // up
+					case 87: // w
+						moveForward = false;
+						break;
+					case 37: // left
+					case 65: // a
+						moveLeft = false;
+						break;
+					case 40: // down
+					case 83: // s
+						moveBackward = false;
+						break;
+					case 39: // right
+					case 68: // d
+						moveRight = false;
+						break;
+				}
+			};
+			document.addEventListener( 'keydown', onKeyDown, false );
+			document.addEventListener( 'keyup', onKeyUp, false );
+			raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+			// floor
+		/*	var floorGeometry = new THREE.PlaneBufferGeometry( 2000, 2000, 100, 100 );
+			floorGeometry.rotateX( - Math.PI / 2 );
+			// vertex displacement
+			var position = floorGeometry.attributes.position;
+			for ( var i = 0, l = position.count; i < l; i ++ ) {
+				vertex.fromBufferAttribute( position, i );
+				vertex.x += Math.random() * 20 - 10;
+				vertex.y += Math.random() * 2;
+				vertex.z += Math.random() * 20 - 10;
+				position.setXYZ( i, vertex.x, vertex.y, vertex.z );
+			}
+			floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
+			position = floorGeometry.attributes.position;
+			var colors = [];
+			for ( var i = 0, l = position.count; i < l; i ++ ) {
+				color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+				colors.push( color.r, color.g, color.b );
+			}
+			floorGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+			var floorMaterial = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+			var floor = new THREE.Mesh( floorGeometry, floorMaterial );
+			scene.add( floor );
+			// objects
+			var boxGeometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
+			boxGeometry = boxGeometry.toNonIndexed(); // ensure each face has unique vertices
+			position = boxGeometry.attributes.position;
+			colors = [];
+			for ( var i = 0, l = position.count; i < l; i ++ ) {
+				color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+				colors.push( color.r, color.g, color.b );
+			}*/
+
+
+
+
+
 
 				var SoundControls = function () {
 				this.master = listener.getMasterVolume();
@@ -221,7 +344,7 @@
         camera.updateProjectionMatrix();
 
         renderer.setSize( window.innerWidth, window.innerHeight );
-				controls.handleResize();
+				//controls.handleResize();
 
     }
 
@@ -236,11 +359,40 @@
         if ( mixer ) mixer.update( delta );
 
 
-
+				if ( controls.isLocked === true ) {
+					raycaster.ray.origin.copy( controls.getObject().position );
+					raycaster.ray.origin.y -= 10;
+					var intersections = raycaster.intersectObjects( objects );
+					var onObject = intersections.length > 0;
+					var time = performance.now();
+					var delta = ( time - prevTime ) / 1000;
+					velocity.x -= velocity.x * 1.0 * delta;
+					velocity.z -= velocity.z * 1.0 * delta;
+					velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+					direction.z = Number( moveForward ) - Number( moveBackward );
+					direction.x = Number( moveRight ) - Number( moveLeft );
+					direction.normalize(); // this ensures consistent movements in all directions
+					if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
+					if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
+					if ( onObject === true ) {
+						velocity.y = Math.max( 0, velocity.y );
+						canJump = true;
+					}
+					controls.moveRight( - velocity.x * delta );
+					controls.moveForward( - velocity.z * delta );
+					controls.getObject().position.y += ( velocity.y * delta ); // new behavior
+					if ( controls.getObject().position.y < 10 ) {
+						velocity.y = 0;
+						controls.getObject().position.y = 10;
+						canJump = true;
+					}
+					prevTime = time;
+				}
         renderer.render( scene, camera );
-				controls.update( delta );
-
         stats.update();
+
+
+
 
     }
 

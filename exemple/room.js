@@ -21,10 +21,15 @@ function wall(){
         var wall3 = wall2.clone();
         wall3.position.x = 1025;
 
+				var wall4 = wall1.clone();
+        wall4.position.z += 1450;
+    ;
+
         wallGroup = new THREE.Group();
         wallGroup.add(wall1);
         wallGroup.add(wall2);
         wallGroup.add(wall3);
+				wallGroup.add(wall4);
 
         return wallGroup;
 }
@@ -50,7 +55,7 @@ function ground(){
         cylinder.position.y = 500;
         //ground.add( cylinder );
 
-		
+
         return ground;
 }
 
