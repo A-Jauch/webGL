@@ -56,8 +56,8 @@ function office(){
     		});
 
 				office.scale.set(8,8,8);
-				office.position.set(800,0,600);
-				office.rotation.set(0,2*pi/2,0)
+				office.position.set(500,0,-200);
+				office.rotation.set(0,-pi/2,0)
 
 				return office;
 
@@ -302,8 +302,8 @@ function poster(scene){
 				picture.add(support);
 				picture.add(bg);
 
-				picture.position.set(930,190,880);
-				picture.rotation.set(0,-4 * pi/6, 0);
+				picture.position.set(750,190,-280);
+				picture.rotation.set(0,- pi/6, 0);
 
 				scene.add(picture);
 
@@ -364,5 +364,68 @@ function bookCase() {
 	return bookCGroup;
 }
 
+function dresser(scene){
+				var dresserGroup;
+				var dresserGroup = new THREE.Group();
+				dresserGroup.applyMatrix( new THREE.Matrix4().makeTranslation(750, 25, 800) );
+				dresserGroup.rotation.y = Math.PI/3;
 
-export { office, bed, door, poster, bookCase }
+				var dresserFootPosition = [0, 0, 0];
+    			var dresserFootGeometry = new THREE.CylinderGeometry( 5, 5, 50, 300 );
+  				var dresserFootTexture = new THREE.TextureLoader().load('textures/wood.jpg');
+			    var dresserFootMaterial = new THREE.MeshBasicMaterial( { map : dresserFootTexture } );
+    			var dresserFoot = new THREE.Mesh( dresserFootGeometry, dresserFootMaterial );
+    			dresserFoot.position.set(dresserFootPosition[0] +160, dresserFootPosition[1], dresserFootPosition[2] -60);
+    			dresserGroup.add( dresserFoot );
+
+    			var dresserFoot2 = dresserFoot.clone();
+    			dresserFoot2.position.set(dresserFootPosition[0] +160, dresserFootPosition[1], dresserFootPosition[2] +60);
+    			dresserGroup.add( dresserFoot2 );
+
+    			var dresserFoot3 = dresserFoot.clone();
+    			dresserFoot3.position.set(dresserFootPosition[0] -160, dresserFootPosition[1], dresserFootPosition[2] -60);
+    			dresserGroup.add( dresserFoot3 );
+
+    			var dresserFoot4 = dresserFoot.clone();
+    			dresserFoot4.position.set(dresserFootPosition[0] -160, dresserFootPosition[1], dresserFootPosition[2] +60);
+    			dresserGroup.add( dresserFoot4 );
+
+
+				var dresserTexture = new THREE.TextureLoader().load( 'textures/wood.jpg' );
+	        	var dresserGeometry = new THREE.CubeGeometry(350, 10, 140);
+    	    	var dresserMaterial = new THREE.MeshBasicMaterial( {map: dresserTexture } );
+        		var dresser = new THREE.Mesh( dresserGeometry, dresserMaterial );
+        		dresser.position.set(dresserFootPosition[0], dresserFootPosition[1]+30, dresserFootPosition[2]);
+        		dresserGroup.add( dresser );
+
+        		var dresser2 = dresser.clone();
+        		dresser2.position.set(dresserFootPosition[0], dresserFootPosition[1]+130, dresserFootPosition[2]);
+        		dresserGroup.add( dresser2 );
+
+        		var dresser3Texture = new THREE.TextureLoader().load( 'textures/wood.jpg' );
+	        	var dresser3Geometry = new THREE.CubeGeometry(110, 10, 140);
+    	    	var dresser3Material = new THREE.MeshBasicMaterial( {map: dresserTexture } );
+        		var dresser3 = new THREE.Mesh( dresser3Geometry, dresser3Material );
+        		dresser3.position.set(dresserFootPosition[0] + 175, dresserFootPosition[1]+80, dresserFootPosition[2]);
+        		dresser3.rotation.z = Math.PI/2;
+        		dresserGroup.add( dresser3 );
+
+        		var dresser4 = dresser3.clone();
+        		dresser4.position.set(dresserFootPosition[0] - 175, dresserFootPosition[1]+80, dresserFootPosition[2]);
+        		dresser4.rotation.z = Math.PI/2;
+        		dresserGroup.add( dresser4 );
+
+				loader.load('models/flatScreen/scene.gltf', function ( gltf ) {
+					var flatScreen = gltf.scene;
+					flatScreen.scale.set(150,150,150);
+					flatScreen.position.set(dresserFootPosition[0], dresserFootPosition[1] + 231, dresserFootPosition[2]);
+					dresserGroup.add( flatScreen );
+    			});
+
+					dresserGroup.position.set(850,0,700);
+				return dresserGroup;
+
+}
+
+
+export { office, bed, door, poster, bookCase, dresser }
