@@ -50,6 +50,7 @@ function ground(){
         cylinder.position.y = 500;
         //ground.add( cylinder );
 
+		
         return ground;
 }
 

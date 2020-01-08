@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>three.js webgl - FBX loader</title>
+	<title>World Toy</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="main.css">
@@ -27,8 +27,8 @@
 		#overlay > div > button {
 			height: 20px;
 			background: transparent;
-			color: #ffffff;
-			outline: 1px solid #ffffff;
+			color: red;
+			outline: 1px solid black;
 			border: 0px;
 			cursor: pointer;
 		}
@@ -36,20 +36,24 @@
 			color: #777777;
 			font-size: 12px;
 		}
+		#overlay {
+		color:black;
+		background-color:Black;
+		background-size: cover;
+		background-repeat:no-repeat;
+		background-position: center;
+		background-image:url(textures/tw.png);
+		}
+
 	</style>
 
 </head>
 
 <body>
-<div id="info">
-	<a href="http://threejs.org" target="_blank" rel="noopener">three.js</a> - FBXLoader<br />
-	Character and animation from <a href="https://www.mixamo.com/" target="_blank" rel="noopener">Mixamo</a>
-</div>
 
-<div id="overlay">
+	<div id="overlay">
 			<div>
-				<button id="startButton">Click to Play</button>
-				<p>Audio playback requires user interaction.</p>
+				<button id="startButton">Enter in Toy World </button>
 			</div>
 	</div>
 
