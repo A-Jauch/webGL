@@ -4,6 +4,7 @@
 			const loader = new GLTFLoader();
 			var pi = Math.PI;
 
+
 //load gltf object
 function office(){
     //Vriable of office and all everythink on it
@@ -151,8 +152,8 @@ function bed(){
         bedGroup.add(blanket3);
         bedGroup.castShadow = true;
         bedGroup.receiveShadow = true;
-
 				return bedGroup;
+
 }
 function door(){
 	//door features
@@ -424,11 +425,13 @@ function dresser(scene){
 					var flatScreen = gltf.scene;
 					flatScreen.scale.set(150,150,150);
 					flatScreen.position.set(dresserFootPosition[0], dresserFootPosition[1] + 231, dresserFootPosition[2]);
+					flatScreen.rotation.set(0,-pi,0);
 					dresserGroup.add( flatScreen );
     			});
 					dresserGroup.castShadow = true;
 					dresserGroup.receiveShadow = true;
 					dresserGroup.position.set(850,0,700);
+
 				return dresserGroup;
 
 }

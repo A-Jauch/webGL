@@ -36,6 +36,14 @@
 			color: #777777;
 			font-size: 12px;
 		}
+
+		#blocker {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0,0,0,0.5);
+			}
+
 		#instructions,#overlay {
 		color:white;
 		background-color:Black;
@@ -59,7 +67,11 @@
 
 <body>
 	<div id="blocker">
-
+		<div id="overlay">
+				<div>
+					<button id="startButton">Enter in Toy World </button>
+				</div>
+		</div>
 			<div id="instructions">
 				<span style="font-size:36px">Click to play</span>
 				<br /><br />
@@ -69,12 +81,6 @@
 			</div>
 
 		</div>
-	<div id="overlay">
-			<div>
-				<button id="startButton">Enter in Toy World </button>
-			</div>
-	</div>
-
 <script type="module">
 
 			import * as THREE from '../build/three.module.js';
@@ -85,6 +91,8 @@
 			import {office, bed, door, poster, bookCase, dresser} from './furnitures.js';
 			import { wall, ground } from './room.js';
 			import { PointerLockControls } from './jsm/controls/PointerLockControls.js';
+			import { FBXLoader } from './jsm/loaders/FBXLoader.js';
+
 
 
 
@@ -126,8 +134,8 @@
 
     function init() {
 
-			   var overlay = document.getElementById( 'overlay' );
-			   overlay.remove();
+		    var overlay = document.getElementById( 'overlay' );
+		    overlay.remove();
 
         container = document.createElement( 'div' );
         document.body.appendChild( container );
@@ -155,36 +163,51 @@
         light.shadow.camera.right = 120;
         scene.add( light );
 
-        // scene.add( new CameraHelper( light.shadow.camera ) );
-
 
 				//Ambient sound
 				var audioloader = new THREE.AudioLoader();
 				var sound1 = new THREE.Audio(listener);
 				audioloader.load('sounds/toy-story.ogg',function(buffer) {
 
-					sound1.setBuffer(buffer);
-					sound1.setLoop( true );
-					sound1.setVolume( 0.25 );
-					sound1.play();
+				sound1.setBuffer(buffer);
+				sound1.setLoop( true );
+				sound1.setVolume( 0.25 );
+				sound1.play();
 
 				})
 
 
-
-
-
-
-		var oscillator = listener.context.createOscillator();
-		oscillator.type = 'sine';
-		oscillator.frequency.setValueAtTime( 144, sound1.context.currentTime );
-		oscillator.start( 0 );
-
+				var oscillator = listener.context.createOscillator();
+				oscillator.type = 'sine';
+				oscillator.frequency.setValueAtTime( 144, sound1.context.currentTime );
+				oscillator.start( 0 );
 
 
 
 				poster(scene);
 				scene.add( wall(), ground(), office(), bed(), door(),bookCase(),dresser() );
+
+				var loader = new FBXLoader();
+				loader.load( 'character/jump.fbx', function ( object ) {
+
+					mixer = new THREE.AnimationMixer( object );
+					var action = mixer.clipAction( object.animations[ 0 ] );
+					action.play();
+					object.traverse( function ( child ) {
+
+						if ( child.isMesh ) {
+
+							child.castShadow = true;
+							child.receiveShadow = true;
+
+						}
+					} );
+					object.scale.set(1/2, 1/2, 1/2);
+          object.position.set(850,0,600);
+					object.rotation.y = -Math.PI /2;
+					scene.add( object );
+
+				} );
 
         renderer = new THREE.WebGLRenderer( { antialias: true } );
         renderer.setPixelRatio( window.devicePixelRatio );
@@ -207,31 +230,32 @@
 
         window.addEventListener( 'resize', onWindowResize, false );
 
-
         // stats
         stats = new Stats();
         container.appendChild( stats.dom );
 
-				//Control cam
-			//	controls = new FirstPersonControls( camera, renderer.domElement );
-			//	controls.movementSpeed = 300;
-		//		controls.lookSpeed = 0.10;
-		//		controls.noFly = true;
-		//		controls.lookVertical = true;
-		controls = new PointerLockControls( camera, document.body );
+			controls = new PointerLockControls( camera, document.body );
 			var blocker = document.getElementById( 'blocker' );
 			var instructions = document.getElementById( 'instructions' );
+
+
 			instructions.addEventListener( 'click', function () {
 				controls.lock();
 			}, false );
+
+
 			controls.addEventListener( 'lock', function () {
 				instructions.style.display = 'none';
 				blocker.style.display = 'none';
 			} );
+
+
 			controls.addEventListener( 'unlock', function () {
 				blocker.style.display = 'block';
 				instructions.style.display = '';
 			} );
+
+
 			scene.add( controls.getObject() );
 			var onKeyDown = function ( event ) {
 				switch ( event.keyCode ) {
@@ -307,6 +331,11 @@
 					p_sound1.setVolume( soundControls.Positional );
 				} );
 				volumeFolder.open();
+
+
+				objects.push(wall(), ground(), office(), bed(), door(),bookCase(),dresser());
+
+
     }
 
     function onWindowResize() {
@@ -319,7 +348,6 @@
 
     }
 
-    //
 
     function animate() {
 
@@ -332,26 +360,34 @@
 
 				if ( controls.isLocked === true ) {
 					raycaster.ray.origin.copy( controls.getObject().position );
-					raycaster.ray.origin.y -= 0;
-					var intersections = raycaster.intersectObjects( objects );
+					raycaster.ray.origin.y -= 10;
+
+					var intersections = raycaster.intersectObjects( objects);
 					var onObject = intersections.length > 0;
 					var time = performance.now();
+
 					var delta = ( time - prevTime ) / 1000;
 					velocity.x -= velocity.x * 1.0 * delta;
 					velocity.z -= velocity.z * 1.0 * delta;
 					velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+
 					direction.z = Number( moveForward ) - Number( moveBackward );
 					direction.x = Number( moveRight ) - Number( moveLeft );
 					direction.normalize(); // this ensures consistent movements in all directions
+
 					if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
+
 					if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
-					if ( onObject === true ) {
+
+					if ( onObject === true )
+					{
 						velocity.y = Math.max( 0, velocity.y );
 						canJump = true;
 					}
 					controls.moveRight( - velocity.x * delta );
 					controls.moveForward( - velocity.z * delta );
 					controls.getObject().position.y += ( velocity.y * delta ); // new behavior
+
 					if ( controls.getObject().position.y < 10 ) {
 						velocity.y = 0;
 						controls.getObject().position.y = 10;
@@ -363,11 +399,7 @@
         stats.update();
 
 
-
-
     }
-
-
 
 
 </script>

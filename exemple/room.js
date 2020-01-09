@@ -10,6 +10,8 @@ function wall(){
         var geometry2 = new THREE.BoxBufferGeometry( 2000, 1000, 50 );
         var texture = new THREE.TextureLoader().load('textures/wall_test.jpg');
         var material2 = new THREE.MeshBasicMaterial( {map: texture} );
+
+
         var wall1 = new THREE.Mesh( geometry2, material2 );
         wall1.position.set(0,500,-425);
 
@@ -35,16 +37,19 @@ function wall(){
 }
 
 function ground(){
+
     // ground
+			  var ground_texture = new THREE.TextureLoader().load('textures/eau.png');
+				var material3 = new THREE.MeshBasicMaterial( {map: ground_texture} );
         var ground = new THREE.Group();
 
-        var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+        var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), material3);
         mesh.rotation.x = - Math.PI / 2;
         mesh.receiveShadow = true;
         ground.add( mesh );
 
-        var grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
-        grid.material.opacity = 0.2;
+       var grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
+        grid.material.opacity = 0.5;
         grid.material.transparent = true;
         ground.add( grid );
 
